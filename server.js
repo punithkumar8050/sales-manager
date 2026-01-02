@@ -8,37 +8,32 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// --- CHANGE: Serve files from the MAIN directory now ---
+app.use(express.static(__dirname)); 
 
 // --- DATABASE (In-Memory Storage) ---
-// This acts as your storage. When you add a customer, they go here.
 let salesDatabase = [];
 
 // --- API ENDPOINTS ---
-
-// 1. Get All Data (Used when page loads)
 app.get('/api/sales', (req, res) => {
     res.json(salesDatabase);
 });
 
-// 2. Add New Sale (Stores Email & Money)
 app.post('/api/add-item', (req, res) => {
     const { email, cost, sell, profit } = req.body;
-    
     const newItem = {
         id: Date.now(),
-        date: new Date().toISOString().split('T')[0], // Stores YYYY-MM-DD
+        date: new Date().toISOString().split('T')[0],
         email: email,
         cost: parseFloat(cost),
         sell: parseFloat(sell),
         profit: parseFloat(profit)
     };
-
     salesDatabase.push(newItem);
     res.json({ message: "Saved successfully", item: newItem });
 });
 
-// 3. Delete Item (Bin)
 app.delete('/api/delete-item/:id', (req, res) => {
     const idToDelete = parseInt(req.params.id);
     salesDatabase = salesDatabase.filter(item => item.id !== idToDelete);
@@ -49,7 +44,6 @@ app.delete('/api/delete-item/:id', (req, res) => {
 function predictNextValue(data) {
     const n = data.length;
     if(n === 0) return 0;
-    
     let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
     for (let i = 0; i < n; i++) {
         sumX += i;
@@ -63,14 +57,11 @@ function predictNextValue(data) {
 }
 
 app.post('/api/predict', (req, res) => {
-    // We now use the REAL database for predictions
     if (salesDatabase.length < 2) {
         return res.json({ tomorrowSales: 0, tomorrowProfit: 0, message: "Not enough data" });
     }
-
     const salesHistory = salesDatabase.map(item => item.sell);
     const profitHistory = salesDatabase.map(item => item.profit);
-
     const predictedSales = predictNextValue(salesHistory);
     const predictedProfit = predictNextValue(profitHistory);
 
@@ -80,9 +71,9 @@ app.post('/api/predict', (req, res) => {
     });
 });
 
-// Serve the frontend
+// --- CHANGE: Look for index.html in the main folder ---
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(PORT, () => {
