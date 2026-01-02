@@ -3,273 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Manager Portal</title>
+    <title>My Sales Manager</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f0f2f5; color: black; font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        body { background-color: #f4f4f9; color: black; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
-        /* --- LOGIN SCREENS --- */
-        .login-container {
-            background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center; margin-top: 100px; width: 300px;
+        /* --- LOGIN SCREEN --- */
+        #login-screen {
+            background: white; padding: 50px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center; margin-top: 100px; width: 90%; max-width: 350px;
         }
-        .login-btn { width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: bold; }
-        .btn-black { background: black; color: white; }
-        .btn-blue { background: #007bff; color: white; }
-        input { padding: 10px; width: 100%; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .login-btn { width: 100%; padding: 15px; margin-top: 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; background: black; color: white; transition: 0.3s;}
+        .login-btn:hover { background: #333; }
+        input { padding: 15px; width: 100%; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
 
-        /* --- APP CONTAINER (Hidden by default) --- */
-        #app-interface { display: none; width: 100%; display: flex; flex-direction: column; align-items: center; }
-        .hidden { display: none !important; }
+        /* --- APP INTERFACE (Hidden initially) --- */
+        #app-interface { display: none; width: 100%; flex-direction: column; align-items: center; }
 
-        /* --- HEADER & CLOCK --- */
-        header { background-color: black; color: white; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; box-sizing: border-box; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .clock-container { background-color: black; border: 3px double #555; border-radius: 8px; padding: 5px; width: 150px; color: red; font-family: 'Orbitron', sans-serif; text-align: center; }
-        .digital-row { border: 1px solid #333; border-radius: 5px; background: #0a0a0a; display: flex; justify-content: center; font-size: 1.2rem; font-weight: bold; }
-
-        /* --- DASHBOARD & TABLE --- */
-        .main-content { width: 95%; max-width: 1000px; padding: 20px 0; }
-        .sales-controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-box { background-color: white; padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .table-container { width: 100%; overflow-x: auto; background: white; border-radius: 10px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: black; color: white; }
+        /* --- HEADER --- */
+        header { background-color: black; color: white; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; box-sizing: border-box; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .clock-container { background-color: #111; border: 2px solid #444; border-radius: 8px; padding: 5px 15px; color: red; font-family: 'Orbitron', sans-serif; text-align: center; min-width: 120px; }
         
-        .logout-btn { background: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        /* --- MAIN CONTENT --- */
+        .main-content { width: 95%; max-width: 900px; padding: 20px 0; }
+        
+        /* --- INPUTS --- */
+        .sales-controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .sales-controls input { flex: 1; min-width: 150px; margin-bottom: 0; }
+
+        /* --- DASHBOARD STATS --- */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-box { background-color: white; padding: 20px; text-align: center; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .stat-title { font-size: 0.8rem; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-value { font-size: 1.8rem; font-weight: bold; color: #222; margin-top: 10px; }
+        
+        /* --- TABLE --- */
+        .table-container { width: 100%; overflow-x: auto; background: white; border-radius: 12px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        th { background-color: #f8f8f8; color: #555; font-size: 0.85rem; text-transform: uppercase; text-align: left; padding: 15px; }
+        td { padding: 15px; border-bottom: 1px solid #eee; color: #444; font-size: 0.95rem; }
+        
+        /* --- AI SECTION --- */
+        .ai-section { background: linear-gradient(135deg, #1e1e1e, #3a3a3a); color: white; padding: 25px; border-radius: 15px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .ai-btn { background: white; color: black; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: 0.3s; }
+        .ai-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+
+        .logout-link { color: #aaa; text-decoration: none; font-size: 0.9rem; margin-left: 10px; cursor: pointer; }
+        .logout-link:hover { color: white; }
+
+        /* MOBILE FIX */
+        @media (max-width: 600px) {
+            header { flex-direction: column; gap: 15px; align-items: flex-start; }
+            .clock-container { align-self: center; width: 100%; }
+            .sales-controls { flex-direction: column; }
+            .dashboard-grid { grid-template-columns: 1fr 1fr; }
+        }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" class="login-container">
-        <h2>Welcome</h2>
-        <p>Please select your role:</p>
-        <button class="login-btn btn-black" onclick="showAdminLogin()">Admin (Shop Owner)</button>
-        <button class="login-btn btn-blue" onclick="showCustomerLogin()">Customer</button>
+    <div id="login-screen">
+        <h2 style="margin-top:0;">SALES MANAGER</h2>
+        <p style="color:#666;">Secure Personal Dashboard</p>
+        <div style="text-align:left; margin-bottom:5px; font-size:0.9rem; font-weight:bold;">Your Email ID</div>
+        <input type="email" id="userEmail" placeholder="e.g., shop1@gmail.com">
+        <button class="login-btn" onclick="login()">ACCESS DASHBOARD</button>
     </div>
 
-    <div id="admin-login" class="login-container hidden">
-        <h2>Admin Login</h2>
-        <input type="password" id="adminPass" placeholder="Enter Password">
-        <button class="login-btn btn-black" onclick="checkAdmin()">Login</button>
-        <button class="login-btn" style="background:#ddd" onclick="goBack()">Back</button>
-    </div>
-
-    <div id="customer-login" class="login-container hidden">
-        <h2>Customer Access</h2>
-        <p>Enter your email to view your receipts.</p>
-        <input type="email" id="loginEmail" placeholder="yourname@gmail.com">
-        <button class="login-btn btn-blue" onclick="checkCustomer()">View My History</button>
-        <button class="login-btn" style="background:#ddd" onclick="goBack()">Back</button>
-    </div>
-
-    <div id="app-interface" class="hidden">
+    <div id="app-interface">
         <header>
             <div>
-                <h1 style="margin:0; font-size:1.2rem;">SALES MANAGER</h1>
-                <span id="user-role" style="font-size:0.8rem; color:#ccc;">Role: Guest</span>
-            </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div class="clock-container">
-                    <div class="digital-row" id="clock-time">00:00:00</div>
+                <h1 style="margin:0; font-size:1.2rem; letter-spacing:1px;">MY SALES DASHBOARD</h1>
+                <div style="margin-top:5px;">
+                    <span id="display-email" style="font-size:0.8rem; color:#ccc;"></span>
+                    <a class="logout-link" onclick="location.reload()">(Logout)</a>
                 </div>
-                <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
+            <div class="clock-container" id="clock">00:00:00</div>
         </header>
 
         <div class="main-content">
             
-            <div id="admin-controls" class="sales-controls hidden">
-                <input type="email" id="customerEmail" placeholder="Customer Email">
-                <input type="number" id="costPrice" placeholder="Cost Price">
-                <input type="number" id="sellPrice" placeholder="Sell Price">
-                <button class="login-btn btn-black" style="width:auto;" onclick="addItem()">ADD SALE</button>
+            <div class="sales-controls">
+                <input type="number" id="costPrice" placeholder="Cost Price (₹)">
+                <input type="number" id="sellPrice" placeholder="Sell Price (₹)">
+                <button class="login-btn" style="margin-top:0; flex:1;" onclick="addSale()">ADD RECORD</button>
             </div>
 
             <div class="dashboard-grid">
                 <div class="stat-box">
-                    <div style="font-size:0.8rem; color:#777">TOTAL SPENT/SALES</div>
-                    <div style="font-size:1.5rem; font-weight:bold" id="dashSales">₹0</div>
+                    <div class="stat-title">Total Sales</div>
+                    <div class="stat-value" id="dashSales">₹0</div>
                 </div>
-                <div class="stat-box" id="profit-box">
-                    <div style="font-size:0.8rem; color:#777">TOTAL PROFIT</div>
-                    <div style="font-size:1.5rem; font-weight:bold; color:green" id="dashProfit">₹0</div>
+                <div class="stat-box">
+                    <div class="stat-title">Net Profit</div>
+                    <div class="stat-value" id="dashProfit" style="color:green;">₹0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">Records</div>
+                    <div class="stat-value" id="dashCount">0</div>
                 </div>
             </div>
 
-            <h3>Transaction History</h3>
+            <h3>My Transaction History</h3>
             <div class="table-container">
                 <table id="salesTable">
                     <thead>
                         <tr>
                             <th>Date</th>
-                            <th>Item Details</th> <th>Amount</th>
-                            <th id="action-header">Action</th>
+                            <th>Cost</th>
+                            <th>Sold For</th>
+                            <th>My Profit</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
                 </table>
             </div>
 
-            <div id="ai-section" class="stat-box hidden" style="margin-top:20px; background:#222; color:white;">
-                <h3>AI PREDICTION 🤖</h3>
-                <button class="login-btn" style="background:white; color:black" onclick="predict()">Predict Future Sales</button>
-                <div id="aiResult" style="margin-top:10px; color:#0f0;"></div>
+            <div class="ai-section">
+                <h3 style="margin-top:0;">AI BUSINESS ANALYST 🤖</h3>
+                <p style="font-size:0.9rem; opacity:0.8;">Predict your next day's performance based on your personal history.</p>
+                <button class="ai-btn" onclick="predict()">GENERATE REPORT</button>
+                <div id="aiResult" style="margin-top:15px; color:#4ff; font-weight:bold;"></div>
             </div>
+
         </div>
     </div>
 
     <script>
-        // --- 1. NAVIGATION LOGIC ---
-        function showAdminLogin() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('admin-login').classList.remove('hidden');
-        }
-        function showCustomerLogin() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('customer-login').classList.remove('hidden');
-        }
-        function goBack() {
-            document.getElementById('admin-login').classList.add('hidden');
-            document.getElementById('customer-login').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
-        }
-        function logout() {
-            location.reload(); // Simple reload to "logout"
-        }
+        let currentUser = null;
 
-        // --- 2. AUTHENTICATION ---
-        let currentUserRole = '';
-
-        function checkAdmin() {
-            const pass = document.getElementById('adminPass').value;
-            if(pass === "admin123") { // HARDCODED PASSWORD
-                startApp('admin');
-            } else {
-                alert("Wrong Password!");
+        // --- LOGIN ---
+        function login() {
+            const email = document.getElementById('userEmail').value;
+            if(!email || !email.includes('@')) {
+                alert("Please enter a valid email to access your data.");
+                return;
             }
-        }
-
-        function checkCustomer() {
-            const email = document.getElementById('loginEmail').value;
-            if(email && email.includes('@')) {
-                startApp('customer', email);
-            } else {
-                alert("Invalid Email");
-            }
-        }
-
-        function startApp(role, email = null) {
-            currentUserRole = role;
+            currentUser = email.toLowerCase();
+            document.getElementById('display-email').innerText = currentUser;
             
-            // Hide Logins, Show App
-            document.getElementById('admin-login').classList.add('hidden');
-            document.getElementById('customer-login').classList.add('hidden');
-            document.getElementById('app-interface').classList.remove('hidden');
+            // Switch Screens
+            document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-interface').style.display = 'flex';
+            
+            // Load Data
+            loadMyData();
+        }
 
-            if(role === 'admin') {
-                document.getElementById('user-role').innerText = "Role: Administrator";
-                document.getElementById('admin-controls').classList.remove('hidden');
-                document.getElementById('ai-section').classList.remove('hidden');
-                document.getElementById('profit-box').classList.remove('hidden'); // Admin sees profit
-                loadAdminData();
-            } else {
-                document.getElementById('user-role').innerText = "User: " + email;
-                document.getElementById('profit-box').classList.add('hidden'); // Customers don't see profit
-                document.getElementById('action-header').classList.add('hidden'); // Customers can't delete
-                loadCustomerData(email);
+        // --- LOAD DATA ---
+        async function loadMyData() {
+            try {
+                // We send the email as a query parameter
+                const res = await fetch(`/api/my-data?email=${currentUser}`);
+                const data = await res.json();
+                renderUI(data);
+            } catch (e) { console.error(e); }
+        }
+
+        // --- ADD SALE ---
+        async function addSale() {
+            const cost = document.getElementById('costPrice').value;
+            const sell = document.getElementById('sellPrice').value;
+
+            if(!cost || !sell) return alert("Please enter amounts");
+
+            await fetch('/api/add-item', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: currentUser, // Automatically attach the logged-in email
+                    cost: cost,
+                    sell: sell,
+                    profit: parseFloat(sell) - parseFloat(cost)
+                })
+            });
+
+            document.getElementById('costPrice').value = '';
+            document.getElementById('sellPrice').value = '';
+            loadMyData();
+        }
+
+        // --- DELETE ---
+        async function deleteItem(id) {
+            if(confirm("Remove this record?")) {
+                await fetch(`/api/delete-item/${id}`, { method: 'DELETE' });
+                loadMyData();
             }
         }
 
-        // --- 3. DATA FETCHING ---
-        async function loadAdminData() {
-            const res = await fetch('/api/admin/all-sales');
-            const data = await res.json();
-            renderTable(data, true);
-        }
-
-        async function loadCustomerData(email) {
-            const res = await fetch(`/api/customer/history/${email}`);
-            const data = await res.json();
-            renderTable(data, false);
-        }
-
-        // --- 4. RENDER TABLE ---
-        function renderTable(items, isAdmin) {
+        // --- UI RENDER ---
+        function renderUI(items) {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
             let totalSales = 0;
             let totalProfit = 0;
 
             if(items.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">No records found.</td></tr>';
-                return;
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#999;">Welcome! Add your first sale above.</td></tr>';
             }
 
+            // Show newest first
             items.slice().reverse().forEach(item => {
                 totalSales += item.sell;
                 totalProfit += item.profit;
-
+                
                 const row = `
                     <tr>
                         <td>${item.date}</td>
-                        <td>
-                            <div style="font-weight:bold">${item.email}</div>
-                            <div style="font-size:0.8rem; color:#666">Cost: ₹${isAdmin ? item.cost : '***'}</div>
-                        </td>
-                        <td style="font-weight:bold; color:green">₹${item.sell}</td>
-                        ${isAdmin ? `<td><button onclick="deleteItem(${item.id})" style="background:red; color:white; border:none; padding:5px; border-radius:3px;">Del</button></td>` : ''}
+                        <td>₹${item.cost}</td>
+                        <td>₹${item.sell}</td>
+                        <td style="color:${item.profit>=0?'green':'red'}">₹${item.profit}</td>
+                        <td><button onclick="deleteItem(${item.id})" style="background:#faa; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">X</button></td>
                     </tr>
                 `;
                 tbody.innerHTML += row;
             });
 
             document.getElementById('dashSales').innerText = "₹" + totalSales;
-            if(isAdmin) document.getElementById('dashProfit').innerText = "₹" + totalProfit;
+            document.getElementById('dashProfit').innerText = "₹" + totalProfit;
+            document.getElementById('dashCount').innerText = items.length;
         }
 
-        // --- 5. ADMIN ACTIONS ---
-        async function addItem() {
-            const email = document.getElementById('customerEmail').value;
-            const cost = document.getElementById('costPrice').value;
-            const sell = document.getElementById('sellPrice').value;
-
-            if(!email || !cost || !sell) return alert("Fill all fields");
-
-            await fetch('/api/add-item', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    email, cost, sell, profit: sell - cost
-                })
-            });
-            
-            // Clear inputs and reload
-            document.getElementById('customerEmail').value = '';
-            document.getElementById('costPrice').value = '';
-            document.getElementById('sellPrice').value = '';
-            loadAdminData();
-        }
-
-        async function deleteItem(id) {
-            if(confirm("Delete this?")) {
-                await fetch(`/api/delete-item/${id}`, {method: 'DELETE'});
-                loadAdminData();
-            }
-        }
-
+        // --- AI PREDICT ---
         async function predict() {
-            document.getElementById('aiResult').innerText = "Thinking...";
-            const res = await fetch('/api/predict', {method: 'POST'});
+            document.getElementById('aiResult').innerText = "Analyzing your data...";
+            const res = await fetch('/api/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: currentUser })
+            });
             const data = await res.json();
-            document.getElementById('aiResult').innerText = `Forecast: Sales ₹${data.tomorrowSales}, Profit ₹${data.tomorrowProfit}`;
+            
+            if(data.message) {
+                document.getElementById('aiResult').innerText = data.message;
+            } else {
+                document.getElementById('aiResult').innerHTML = 
+                    `Based on your history:<br>Expected Sales: ₹${data.tomorrowSales} | Expected Profit: ₹${data.tomorrowProfit}`;
+            }
         }
 
         // --- CLOCK ---
         setInterval(() => {
-            document.getElementById('clock-time').innerText = new Date().toLocaleTimeString('en-GB');
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-GB');
         }, 1000);
 
     </script>
