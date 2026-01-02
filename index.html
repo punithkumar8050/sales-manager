@@ -3,337 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Manager</title>
+    <title>Sales Manager Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* --- GENERAL --- */
-        body { 
-            background-color: white; 
-            color: black; 
-            font-family: Arial, sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-        }
-
-        /* --- HEADER --- */
-        header { 
-            background-color: black; 
-            color: white; 
-            width: 100%; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 10px 20px; 
-            box-sizing: border-box; 
-            margin-bottom: 20px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
-        }
-        h1 { 
-            font-size: 1.5rem; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            margin: 0; 
-        }
-
-        /* --- CLOCK --- */
-        .clock-container { 
-            background-color: black; 
-            border: 3px double #555; 
-            border-radius: 8px; 
-            padding: 5px; 
-            width: 180px; /* Smaller default width */
-            color: red; 
-            font-family: 'Orbitron', sans-serif; 
-            text-align: center; 
-        }
-        .clock-labels { color: #999; font-size: 0.4rem; display: flex; justify-content: space-around; margin-bottom: 2px; font-weight: bold; font-family: Arial, sans-serif; }
-        .digital-row { border: 1px solid #333; border-radius: 5px; padding: 2px; margin-bottom: 2px; background: #0a0a0a; display: flex; justify-content: space-around; align-items: center; }
-        .digit-group { font-size: 0.8rem; letter-spacing: 1px; }
-        .digit-large { font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; }
-
-        .main-content { 
-            width: 95%; 
-            max-width: 1000px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding-bottom: 50px;
-        }
-
-        /* --- CONTROLS --- */
-        .sales-controls { 
-            display: flex; 
-            gap: 10px; 
-            margin-bottom: 20px; 
-            flex-wrap: wrap; 
-            justify-content: center; 
-            background: #f4f4f4; 
-            padding: 15px; 
-            border-radius: 10px; 
-            border: 1px solid #ccc; 
-            width: 100%;
-            box-sizing: border-box;
-        }
-        input { 
-            padding: 10px; 
-            border: 2px solid black; 
-            border-radius: 5px; 
-            font-size: 1rem; 
-            flex: 1; /* Grow to fill space */
-            min-width: 150px;
-        }
+        body { background-color: #f0f2f5; color: black; font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
-        button { padding: 10px 20px; cursor: pointer; font-weight: bold; border: none; border-radius: 5px; transition: 0.3s; white-space: nowrap; }
-        .btn-add { background-color: black; color: white; width: 100%; } /* Full width button on mobile default */
-        .btn-add:hover { background-color: #333; }
-
-        /* --- DASHBOARD --- */
-        .dashboard-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); /* 2 Columns on mobile */
-            gap: 10px; 
-            width: 100%; 
-            margin-bottom: 20px; 
+        /* --- LOGIN SCREENS --- */
+        .login-container {
+            background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center; margin-top: 100px; width: 300px;
         }
-        .stat-box { background-color: #f8f8f8; border: 2px solid black; padding: 10px; text-align: center; border-radius: 8px; box-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
-        .stat-title { font-size: 0.7rem; font-weight: bold; color: #555; text-transform: uppercase; }
-        .stat-value { font-size: 1.2rem; font-weight: bold; color: black; margin-top: 5px; }
-        .profit-pos { color: green; }
+        .login-btn { width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: bold; }
+        .btn-black { background: black; color: white; }
+        .btn-blue { background: #007bff; color: white; }
+        input { padding: 10px; width: 100%; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
 
-        /* --- TABLE (SCROLLABLE) --- */
-        .table-container {
-            width: 100%;
-            overflow-x: auto; /* Adds scroll bar if table is too wide */
-            margin-bottom: 30px;
-            border: 1px solid #ddd;
-        }
+        /* --- APP CONTAINER (Hidden by default) --- */
+        #app-interface { display: none; width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .hidden { display: none !important; }
 
-        table { width: 100%; border-collapse: collapse; min-width: 600px; /* Force minimum width so it doesn't squash */ }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; font-size: 0.9rem; }
+        /* --- HEADER & CLOCK --- */
+        header { background-color: black; color: white; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; box-sizing: border-box; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .clock-container { background-color: black; border: 3px double #555; border-radius: 8px; padding: 5px; width: 150px; color: red; font-family: 'Orbitron', sans-serif; text-align: center; }
+        .digital-row { border: 1px solid #333; border-radius: 5px; background: #0a0a0a; display: flex; justify-content: center; font-size: 1.2rem; font-weight: bold; }
+
+        /* --- DASHBOARD & TABLE --- */
+        .main-content { width: 95%; max-width: 1000px; padding: 20px 0; }
+        .sales-controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-box { background-color: white; padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .table-container { width: 100%; overflow-x: auto; background: white; border-radius: 10px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
         th { background-color: black; color: white; }
-        .btn-delete { background-color: #cc0000; color: white; padding: 5px 8px; font-size: 0.7rem; border-radius: 4px; cursor: pointer;}
-
-        /* --- AI SECTION --- */
-        .ai-section { background: linear-gradient(135deg, #000, #222); color: white; padding: 20px; border-radius: 15px; text-align: center; width: 100%; margin-bottom: 50px; box-sizing: border-box;}
-        .ai-btn { background-color: white; color: black; margin-top: 10px; width: 100%; padding: 15px;}
-        .prediction-result { color: #0f0; margin-top: 10px; font-size: 1.1rem; display: none; }
-
-        /* --- MOBILE SPECIFIC RULES --- */
-        @media (max-width: 600px) {
-            header {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .sales-controls {
-                flex-direction: column;
-            }
-
-            input {
-                width: 100%; /* Full width inputs */
-                box-sizing: border-box;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr 1fr; /* Keep 2 columns even on phone */
-            }
-            
-            h1 { font-size: 1.2rem; }
-        }
-
-        @media (min-width: 601px) {
-            .btn-add { width: auto; } /* Normal button on PC */
-            .dashboard-grid { grid-template-columns: repeat(4, 1fr); } /* 4 Columns on PC */
-        }
-
+        
+        .logout-btn { background: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Sales Manager</h1>
-        <div class="clock-container">
-            <div class="clock-labels"><span>DATE</span><span>MTH</span><span>YR</span></div>
-            <div class="digital-row">
-                <div class="digit-group" id="date">00</div>
-                <div class="digit-group" id="month">00</div>
-                <div class="digit-group" id="year">00</div>
-            </div>
-            <div class="digital-row" style="margin-bottom:0;">
-                <div class="digit-large" id="full-time">00:00:00</div>
-            </div>
-            <div style="font-size:0.6rem; margin-top:2px; color:#fff;">TEMP: 29°C</div>
-        </div>
-    </header>
+    <div id="login-screen" class="login-container">
+        <h2>Welcome</h2>
+        <p>Please select your role:</p>
+        <button class="login-btn btn-black" onclick="showAdminLogin()">Admin (Shop Owner)</button>
+        <button class="login-btn btn-blue" onclick="showCustomerLogin()">Customer</button>
+    </div>
 
-    <div class="main-content">
-        
-        <div class="sales-controls">
-            <input type="email" id="customerEmail" placeholder="Customer Email (@)">
-            <input type="number" id="costPrice" placeholder="Cost Price (₹)">
-            <input type="number" id="sellPrice" placeholder="Sell Price (₹)">
-            <button class="btn-add" onclick="addItem()">ADD SALE</button>
-        </div>
+    <div id="admin-login" class="login-container hidden">
+        <h2>Admin Login</h2>
+        <input type="password" id="adminPass" placeholder="Enter Password">
+        <button class="login-btn btn-black" onclick="checkAdmin()">Login</button>
+        <button class="login-btn" style="background:#ddd" onclick="goBack()">Back</button>
+    </div>
 
-        <div class="dashboard-grid">
-            <div class="stat-box">
-                <div class="stat-title">Total Sales</div>
-                <div class="stat-value" id="totalSales">₹0</div>
+    <div id="customer-login" class="login-container hidden">
+        <h2>Customer Access</h2>
+        <p>Enter your email to view your receipts.</p>
+        <input type="email" id="loginEmail" placeholder="yourname@gmail.com">
+        <button class="login-btn btn-blue" onclick="checkCustomer()">View My History</button>
+        <button class="login-btn" style="background:#ddd" onclick="goBack()">Back</button>
+    </div>
+
+    <div id="app-interface" class="hidden">
+        <header>
+            <div>
+                <h1 style="margin:0; font-size:1.2rem;">SALES MANAGER</h1>
+                <span id="user-role" style="font-size:0.8rem; color:#ccc;">Role: Guest</span>
             </div>
-            <div class="stat-box">
-                <div class="stat-title">Total Profit</div>
-                <div class="stat-value profit-pos" id="totalProfit">₹0</div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div class="clock-container">
+                    <div class="digital-row" id="clock-time">00:00:00</div>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
-            <div class="stat-box" style="background-color: #e6f7ff;">
-                <div class="stat-title">Customers</div>
-                <div class="stat-value" id="customerCount">0</div>
+        </header>
+
+        <div class="main-content">
+            
+            <div id="admin-controls" class="sales-controls hidden">
+                <input type="email" id="customerEmail" placeholder="Customer Email">
+                <input type="number" id="costPrice" placeholder="Cost Price">
+                <input type="number" id="sellPrice" placeholder="Sell Price">
+                <button class="login-btn btn-black" style="width:auto;" onclick="addItem()">ADD SALE</button>
             </div>
-            <div class="stat-box" style="background-color: #fffbe6;">
-                <div class="stat-title">Status</div>
-                <div class="stat-value" style="color:green; font-size:1rem; margin-top:8px;">Active</div>
+
+            <div class="dashboard-grid">
+                <div class="stat-box">
+                    <div style="font-size:0.8rem; color:#777">TOTAL SPENT/SALES</div>
+                    <div style="font-size:1.5rem; font-weight:bold" id="dashSales">₹0</div>
+                </div>
+                <div class="stat-box" id="profit-box">
+                    <div style="font-size:0.8rem; color:#777">TOTAL PROFIT</div>
+                    <div style="font-size:1.5rem; font-weight:bold; color:green" id="dashProfit">₹0</div>
+                </div>
+            </div>
+
+            <h3>Transaction History</h3>
+            <div class="table-container">
+                <table id="salesTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Item Details</th> <th>Amount</th>
+                            <th id="action-header">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+
+            <div id="ai-section" class="stat-box hidden" style="margin-top:20px; background:#222; color:white;">
+                <h3>AI PREDICTION 🤖</h3>
+                <button class="login-btn" style="background:white; color:black" onclick="predict()">Predict Future Sales</button>
+                <div id="aiResult" style="margin-top:10px; color:#0f0;"></div>
             </div>
         </div>
-
-        <h3 style="align-self: flex-start;">Transaction Database</h3>
-        <div class="table-container">
-            <table id="salesTable">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Email</th>
-                        <th>Cost</th>
-                        <th>Sold</th>
-                        <th>Profit</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    </tbody>
-            </table>
-        </div>
-
-        <div class="ai-section">
-            <h2>AI ANALYTICS 🤖</h2>
-            <p>Predict future sales based on stored data.</p>
-            <button class="ai-btn" onclick="predictTomorrow()">PREDICT PERFORMANCE</button>
-            <div class="prediction-result" id="aiResult"></div>
-        </div>
-
     </div>
 
     <script>
-        // --- 1. CLOCK ---
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('date').innerText = String(now.getDate()).padStart(2, '0');
-            document.getElementById('month').innerText = String(now.getMonth() + 1).padStart(2, '0');
-            document.getElementById('year').innerText = String(now.getFullYear()).slice(-2);
-            document.getElementById('full-time').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+        // --- 1. NAVIGATION LOGIC ---
+        function showAdminLogin() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('admin-login').classList.remove('hidden');
         }
-        setInterval(updateClock, 1000);
-        updateClock();
+        function showCustomerLogin() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('customer-login').classList.remove('hidden');
+        }
+        function goBack() {
+            document.getElementById('admin-login').classList.add('hidden');
+            document.getElementById('customer-login').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+        function logout() {
+            location.reload(); // Simple reload to "logout"
+        }
 
-        // --- 2. DATABASE MANAGEMENT ---
-        window.onload = fetchSalesData;
+        // --- 2. AUTHENTICATION ---
+        let currentUserRole = '';
 
-        async function fetchSalesData() {
-            try {
-                const response = await fetch('/api/sales');
-                const data = await response.json();
-                renderTable(data);
-                updateDashboard(data);
-            } catch (error) {
-                console.error("Error loading data", error);
+        function checkAdmin() {
+            const pass = document.getElementById('adminPass').value;
+            if(pass === "admin123") { // HARDCODED PASSWORD
+                startApp('admin');
+            } else {
+                alert("Wrong Password!");
             }
         }
 
+        function checkCustomer() {
+            const email = document.getElementById('loginEmail').value;
+            if(email && email.includes('@')) {
+                startApp('customer', email);
+            } else {
+                alert("Invalid Email");
+            }
+        }
+
+        function startApp(role, email = null) {
+            currentUserRole = role;
+            
+            // Hide Logins, Show App
+            document.getElementById('admin-login').classList.add('hidden');
+            document.getElementById('customer-login').classList.add('hidden');
+            document.getElementById('app-interface').classList.remove('hidden');
+            document.getElementById('app-interface').style.display = 'flex';
+
+            if(role === 'admin') {
+                document.getElementById('user-role').innerText = "Role: Administrator";
+                document.getElementById('admin-controls').classList.remove('hidden');
+                document.getElementById('ai-section').classList.remove('hidden');
+                document.getElementById('profit-box').classList.remove('hidden'); // Admin sees profit
+                loadAdminData();
+            } else {
+                document.getElementById('user-role').innerText = "User: " + email;
+                document.getElementById('profit-box').classList.add('hidden'); // Customers don't see profit
+                document.getElementById('action-header').classList.add('hidden'); // Customers can't delete
+                loadCustomerData(email);
+            }
+        }
+
+        // --- 3. DATA FETCHING ---
+        async function loadAdminData() {
+            const res = await fetch('/api/admin/all-sales');
+            const data = await res.json();
+            renderTable(data, true);
+        }
+
+        async function loadCustomerData(email) {
+            const res = await fetch(`/api/customer/history/${email}`);
+            const data = await res.json();
+            renderTable(data, false);
+        }
+
+        // --- 4. RENDER TABLE ---
+        function renderTable(items, isAdmin) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            let totalSales = 0;
+            let totalProfit = 0;
+
+            if(items.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">No records found.</td></tr>';
+                return;
+            }
+
+            items.slice().reverse().forEach(item => {
+                totalSales += item.sell;
+                totalProfit += item.profit;
+
+                const row = `
+                    <tr>
+                        <td>${item.date}</td>
+                        <td>
+                            <div style="font-weight:bold">${item.email}</div>
+                            <div style="font-size:0.8rem; color:#666">Cost: ₹${isAdmin ? item.cost : '***'}</div>
+                        </td>
+                        <td style="font-weight:bold; color:green">₹${item.sell}</td>
+                        ${isAdmin ? `<td><button onclick="deleteItem(${item.id})" style="background:red; color:white; border:none; padding:5px; border-radius:3px;">Del</button></td>` : ''}
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            document.getElementById('dashSales').innerText = "₹" + totalSales;
+            if(isAdmin) document.getElementById('dashProfit').innerText = "₹" + totalProfit;
+        }
+
+        // --- 5. ADMIN ACTIONS ---
         async function addItem() {
             const email = document.getElementById('customerEmail').value;
             const cost = document.getElementById('costPrice').value;
             const sell = document.getElementById('sellPrice').value;
 
-            if (!email || !email.includes('@')) { alert("Please enter a valid Customer Email"); return; }
-            if (!cost || !sell) { alert("Please enter Cost and Sell prices"); return; }
+            if(!email || !cost || !sell) return alert("Fill all fields");
 
-            const profit = parseFloat(sell) - parseFloat(cost);
-
-            const response = await fetch('/api/add-item', {
+            await fetch('/api/add-item', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, cost, sell, profit })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    email, cost, sell, profit: sell - cost
+                })
             });
-
-            if (response.ok) {
-                document.getElementById('customerEmail').value = '';
-                document.getElementById('costPrice').value = '';
-                document.getElementById('sellPrice').value = '';
-                fetchSalesData();
-            }
+            
+            // Clear inputs and reload
+            document.getElementById('customerEmail').value = '';
+            document.getElementById('costPrice').value = '';
+            document.getElementById('sellPrice').value = '';
+            loadAdminData();
         }
 
         async function deleteItem(id) {
-            if(confirm("Delete this record?")) {
-                await fetch(`/api/delete-item/${id}`, { method: 'DELETE' });
-                fetchSalesData();
+            if(confirm("Delete this?")) {
+                await fetch(`/api/delete-item/${id}`, {method: 'DELETE'});
+                loadAdminData();
             }
         }
 
-        function renderTable(items) {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-
-            if(items.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="color:#999;">No data found.</td></tr>';
-                return;
-            }
-
-            items.slice().reverse().forEach(item => {
-                const row = `
-                    <tr>
-                        <td style="font-size:0.8rem">${item.date}</td>
-                        <td style="color:#007bff; font-weight:bold; font-size:0.8rem">${item.email.split('@')[0]}...</td> 
-                        <td>₹${item.cost}</td>
-                        <td>₹${item.sell}</td>
-                        <td style="color:${item.profit >= 0 ? 'green' : 'red'}">₹${item.profit}</td>
-                        <td><button class="btn-delete" onclick="deleteItem(${item.id})">Del</button></td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
+        async function predict() {
+            document.getElementById('aiResult').innerText = "Thinking...";
+            const res = await fetch('/api/predict', {method: 'POST'});
+            const data = await res.json();
+            document.getElementById('aiResult').innerText = `Forecast: Sales ₹${data.tomorrowSales}, Profit ₹${data.tomorrowProfit}`;
         }
 
-        function updateDashboard(items) {
-            const totalSales = items.reduce((sum, item) => sum + item.sell, 0);
-            const totalProfit = items.reduce((sum, item) => sum + item.profit, 0);
-            document.getElementById('totalSales').innerText = "₹" + Math.floor(totalSales);
-            document.getElementById('totalProfit').innerText = "₹" + Math.floor(totalProfit);
-            document.getElementById('customerCount').innerText = items.length;
-        }
+        // --- CLOCK ---
+        setInterval(() => {
+            document.getElementById('clock-time').innerText = new Date().toLocaleTimeString('en-GB');
+        }, 1000);
 
-        // --- 3. AI PREDICTION ---
-        async function predictTomorrow() {
-            const resultBox = document.getElementById('aiResult');
-            resultBox.style.display = 'block';
-            resultBox.innerText = "Analyzing...";
-
-            try {
-                const response = await fetch('/api/predict', { method: 'POST' });
-                const data = await response.json();
-                
-                if(data.message) {
-                    resultBox.innerText = data.message;
-                    resultBox.style.color = "orange";
-                } else {
-                    resultBox.style.color = "#0f0";
-                    resultBox.innerHTML = `Sales: ₹${data.tomorrowSales} <br> Profit: ₹${data.tomorrowProfit}`;
-                }
-            } catch (error) {
-                resultBox.innerText = "Error in AI.";
-            }
-        }
     </script>
 </body>
 </html>
